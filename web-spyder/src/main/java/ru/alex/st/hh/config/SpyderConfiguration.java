@@ -1,5 +1,7 @@
 package ru.alex.st.hh.config;
 
+import java.util.Locale;
+
 public interface SpyderConfiguration {
  
 	/**
@@ -43,6 +45,18 @@ public interface SpyderConfiguration {
 	 * @param depth - number of max depth level
 	 */
 	public void setDepth(int depth);
+	
+	/**
+	 * Local string value for Localised messages
+	 * 
+	 * @return local from configuration or null
+	 */
+	public Locale getLocale();
 
 
+	/**
+	 * Sets locale for application
+	 */
+	public void setLocale(String localeStringValue);
+	
 }

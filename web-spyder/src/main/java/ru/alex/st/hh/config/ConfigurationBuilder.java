@@ -23,6 +23,11 @@ public class ConfigurationBuilder  {
 		return this;
 	}
 	
+	public ConfigurationBuilder setLocale(String localeStringValue) {
+		config.setLocale(localeStringValue);
+		return this;
+	}
+	
 	public SpyderConfiguration build() {
 		return config;
 	}

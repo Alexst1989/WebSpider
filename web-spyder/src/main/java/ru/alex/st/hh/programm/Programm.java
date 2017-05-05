@@ -1,12 +1,12 @@
 package ru.alex.st.hh.programm;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ru.alex.st.hh.config.ConfigurationBuilder;
+import ru.alex.st.hh.config.MessageSource;
+import ru.alex.st.hh.config.SpyderConfiguration;
+import ru.alex.st.hh.disk.DiskPageWriter;
 
 public class Programm {
 
@@ -29,19 +29,30 @@ public class Programm {
 	 */
 
 	public static void main(String args[]) {
-		String startUrlString = "https://ru.wikipedia.org/wiki";
-		try {
-			int i = 0;
-			String s = null;
-			URL startUrl = new URL(startUrlString);
-			try (InputStream is = startUrl.openStream();
-			                InputStreamReader isr = new InputStreamReader(is);
-			                BufferedReader br = new BufferedReader(isr)) {
-				while ((s = br.readLine()) != null) LOGGER.info(String.format("%s:%s", ++i, s));
-			}
-		} catch (Exception ex) {
-
-		}
+//		String startUrlString = "https://ru.wikipedia.org/wiki";
+//		try {
+//			int i = 0;
+//			String s = null;
+//			URL startUrl = new URL(startUrlString);
+//			try (InputStream is = startUrl.openStream();
+//			                InputStreamReader isr = new InputStreamReader(is);
+//			                BufferedReader br = new BufferedReader(isr)) {
+//				while ((s = br.readLine()) != null) LOGGER.info("{}: {}", ++i, s));
+//			}
+//		} catch (Exception ex) {
+//
+//		}
+		
+		SpyderConfiguration config = new ConfigurationBuilder()
+						.setDepth(3)
+						.setDiskStoragePath("D:/develop/Temp")
+						.setStartUrl("https://ru.wikipedia.org/wiki")
+						.setLocale("ru_RU")
+						.build();
+		
+		DiskPageWriter writer = new DiskPageWriter(config);
+		writer.writePage(config.getStartUrl(), "1.txt");
+		
 
 	}
 
