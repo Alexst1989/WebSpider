@@ -4,9 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ru.alex.st.hh.config.ConfigurationBuilder;
-import ru.alex.st.hh.config.MessageSource;
 import ru.alex.st.hh.config.SpyderConfiguration;
-import ru.alex.st.hh.disk.DiskPageWriter;
+import ru.alex.st.hh.web.spyder.WebSpyder;
 
 public class Programm {
 
@@ -29,20 +28,6 @@ public class Programm {
 	 */
 
 	public static void main(String args[]) {
-//		String startUrlString = "https://ru.wikipedia.org/wiki";
-//		try {
-//			int i = 0;
-//			String s = null;
-//			URL startUrl = new URL(startUrlString);
-//			try (InputStream is = startUrl.openStream();
-//			                InputStreamReader isr = new InputStreamReader(is);
-//			                BufferedReader br = new BufferedReader(isr)) {
-//				while ((s = br.readLine()) != null) LOGGER.info("{}: {}", ++i, s));
-//			}
-//		} catch (Exception ex) {
-//
-//		}
-		
 		SpyderConfiguration config = new ConfigurationBuilder()
 						.setDepth(3)
 						.setDiskStoragePath("D:/develop/Temp")
@@ -50,10 +35,12 @@ public class Programm {
 						.setLocale("ru_RU")
 						.build();
 		
-		DiskPageWriter writer = new DiskPageWriter(config);
-		writer.writePage(config.getStartUrl(), "1.txt");
+		WebSpyder spyder = new WebSpyder(config);
+		spyder.loadPages();
 		
-
+		
+		
+		LOGGER.info("Finished");
 	}
 
 }

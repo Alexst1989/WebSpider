@@ -7,6 +7,11 @@ public class PageData {
 	private String urlString;
 	
 	private Path diskPath;
+	
+	public PageData(String urlString, Path diskPath) {
+	    this.urlString = urlString;
+	    this.diskPath = diskPath;
+	}
 
 	public String getUrlString() {
 		return urlString;
@@ -24,6 +29,9 @@ public class PageData {
 		this.diskPath = diskPath;
 	}
 	
-	
+	@Override
+	public String toString() {
+	    return String.format("PageData {url = %s, diskPath %s}", urlString, String.valueOf(diskPath));
+	}
 
 }

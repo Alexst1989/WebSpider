@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +20,6 @@ import ru.alex.st.hh.config.SpyderConfiguration;
 import ru.alex.st.hh.programm.Programm;
 
 public class DiskPageWriter {
-    // TODO idea to create general interface for tree and disk storage
 
     private static final Logger LOGGER = LogManager.getLogger(Programm.class);
 
@@ -27,46 +27,41 @@ public class DiskPageWriter {
     private static final String MALFORMED_URL_ERROR_MESSAGE = "spyder.webpageloader.malformedurl";
     private static final String CONNECTION_ERROR = "spyder.webpageloader.malformedurl";
 
-
     private SpyderConfiguration config;
 
     public DiskPageWriter(SpyderConfiguration config) {
         this.config = config;
     }
-    
-    public void writePage(String urlString) {
-        //TODO fix error
-        writePage(urlString, urlString);
-    }
 
-    public void writePage(String urlString, String fileName) {
+    public Path writePage(String urlString, String fileName) {
         try {
             URL url = new URL(urlString);
             try (InputStream is = url.openStream()) {
-                writePage(is, fileName);
+                return writePage(is, Paths.get(config.getDiskStoragePath(), fileName));
             } catch (IOException ex) {
                 LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
             }
         } catch (MalformedURLException ex) {
             LOGGER.error(MessageSource.getMessage(MALFORMED_URL_ERROR_MESSAGE, config.getLocale()), ex);
         }
-
+        return null;
     }
 
-    public void writePage(InputStream is, String fileName) {
+    public Path writePage(InputStream is, Path outPath) {
         try (InputStreamReader isr = new InputStreamReader(is);
                         BufferedReader br = new BufferedReader(isr);
-                        FileOutputStream fos = new FileOutputStream(
-                                        Paths.get(config.getDiskStoragePath(), fileName).toFile(), false);
+                        FileOutputStream fos = new FileOutputStream(outPath.toFile(), false);
                         OutputStreamWriter fow = new OutputStreamWriter(fos);
                         BufferedWriter bw = new BufferedWriter(fow)) {
             String s = null;
             while ((s = br.readLine()) != null) {
                 bw.write(s);
-                bw.write('\r');
+                bw.write(System.lineSeparator());
             }
+            return outPath;
         } catch (IOException e) {
             LOGGER.error(MessageSource.getMessage(FILE_NOT_FOUND_ERROR_MESSAGE, config.getLocale()), e);
+            return null;
         }
     }
 

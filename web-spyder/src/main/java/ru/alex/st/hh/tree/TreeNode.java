@@ -6,9 +6,9 @@ import java.util.List;
 
 public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
-	public T data;
-	public TreeNode<T> parent;
-	public List<TreeNode<T>> children;
+	T data;
+	TreeNode<T> parent;
+	List<TreeNode<T>> children;
 
 	public boolean isRoot() {
 		return parent == null;
@@ -35,6 +35,18 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 			return 0;
 		else
 			return parent.getLevel() + 1;
+	}
+	
+	public T getData() {
+	    return data;
+	}
+	
+	public TreeNode<T> getParent() {
+	    return parent;
+	}
+	
+	public List<TreeNode<T>> getChildren() {
+	    return children;
 	}
 
 	@Override
