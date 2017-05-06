@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import ru.alex.st.hh.config.MessageSource;
 import ru.alex.st.hh.config.SpiderConfiguration;
-import ru.alex.st.hh.disk.search.LinkParser;
 import ru.alex.st.hh.programm.Programm;
+import ru.alex.st.hh.web.LinkParser;
 
 public class DiskPageWriter {
 
@@ -56,7 +56,7 @@ public class DiskPageWriter {
                         BufferedWriter bw = new BufferedWriter(fow)) {
             String s = null;
             while ((s = br.readLine()) != null) {
-                linkParser.findAndSave(s);
+                linkParser.findLinks(s);
                 bw.write(s);
                 bw.write(System.lineSeparator());
             }

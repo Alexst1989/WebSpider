@@ -1,5 +1,8 @@
 package ru.alex.st.hh.programm;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,8 +39,14 @@ public class Programm {
 						.build();
 		
 		WebSpider spider = new WebSpider(config);
-		spider.loadPages();
-		
+//		spider.loadPages();
+		URL url = null;
+        try {
+            url = new URL(config.getStartUrl());
+        } catch (MalformedURLException e) {
+        }
+        LOGGER.info(String.format("%s://%s", url.getProtocol(), url.getHost()));
+        
 		
 		
 		LOGGER.info("Finished");

@@ -1,17 +1,21 @@
-package ru.alex.st.hh.disk.search;
+package ru.alex.st.hh.web;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
 
 import org.testng.annotations.Test;
 
 import junit.framework.Assert;
+import ru.alex.st.hh.web.LinkParser;
 
 public class LinkParserTest {
 
-    private LinkParser parser = new LinkParser();
 
     @Test
-    public void testLinkParser() {
+    public void testLinkParser() throws MalformedURLException {
+        LinkParser parser = new LinkParser(new URL("https://ru.wikipedia.org/wiki"));
+
         String s = "<p><b><a href=\"/wiki/%D0%98%D0%BC%D1%8F_%D1%81%D1%83%D1%89%D0%B5%D1%81%D1%82%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5_%D0%B2_%D0%BC%D0%B0%D0%BA%D0%B5%D0%B4%D0%BE%D0%BD%D1%81%D0%BA%D0%BE%D0%BC_%D1%8F%D0%B7%D1%8B%D0%BA%D0%B5\" title=\"Имя существительное в македонском языке\">Имя существительное в македонском языке</a></b> "
                         + "(<a href=\"/wiki/%D0%9C%D0%B0%D0%BA%D0%B5%D0%B4%D0%BE%D0%BD%D1%81%D0%BA%D0%B8%D0%B9_%D1%8F%D0%B7%D1%8B%D0%BA\" title=\"Македонский язык\">макед.</a> "
                         + "<span lang=\"mk\" style=\"font-style: italic\" xml:lang=\"mk\">именка во македонскиот јазик</span>) — "
@@ -32,7 +36,7 @@ public class LinkParserTest {
                         + "<a href=\"/wiki/%D0%9C%D1%83%D0%B6%D1%81%D0%BA%D0%BE%D0%B9_%D1%80%D0%BE%D0%B4\" title=\"Мужской род\">мужского рода</a> выделяется подкласс имён — названий лиц мужского пола, противопоставленный всем прочим существительным. Помимо общей "
                         + "<a href=\"/wiki/%D0%93%D1%80%D0%B0%D0%BC%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F_%D1%84%D0%BE%D1%80%D0%BC%D0%B0\" title=\"Грамматическая форма\">формы</a> "
                         + "<a href=\"/wiki/%D0%9C%D0%BD%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D0%B5_%D1%87%D0%B8%D1%81%D0%BB%D0%BE\" title=\"Множественное число\">множественного числа</a> грамматически релевантны формы счётного и собирательного множественного числа.</p>";
-        Set<String> linkList = parser.findAndSave(s);
+        Set<String> linkList = parser.findLinks(s);
         for (String link : linkList) {
             System.out.println(link);
         }

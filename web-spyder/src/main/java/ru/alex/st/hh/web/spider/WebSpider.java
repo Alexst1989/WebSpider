@@ -1,5 +1,8 @@
 package ru.alex.st.hh.web.spider;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,15 +23,26 @@ public class WebSpider {
 	
 	private TreeNode<PageData> treeNode;
 	
+	private String serverLink;
+	
 	public WebSpider(SpiderConfiguration config) {
 	    this.config = config;
 		treeNode = new TreeNode<PageData>(new PageData(this.config.getStartUrl(), null));
+		URL url;
+        try {
+            url = new URL(config.getStartUrl());
+        } catch (MalformedURLException e) {
+        }
 	}
 	
 	public void loadPages() {
-//	    loader = new WebPageLoader(treeNode, new DiskPageWriter(config));
-//	    Thread loaderThread = new Thread(loader);
-//	    loaderThread.start();
+	    loader = new WebPageLoader(treeNode, new DiskPageWriter(config));
+	    Thread loaderThread = new Thread(loader);
+	    loaderThread.start();
+	    try {
+            loaderThread.join();
+        } catch (InterruptedException e) {
+        }
 	}
 	
 	
