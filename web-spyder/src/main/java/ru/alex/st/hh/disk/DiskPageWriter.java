@@ -18,14 +18,13 @@ import org.apache.logging.log4j.Logger;
 
 import ru.alex.st.hh.config.MessageSource;
 import ru.alex.st.hh.config.SpiderConfiguration;
-import ru.alex.st.hh.programm.Programm;
 import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.LinkParser;
 import ru.alex.st.hh.web.PageData;
 
 public class DiskPageWriter {
 
-    private static final Logger LOGGER = LogManager.getLogger(Programm.class);
+    private static final Logger LOGGER = LogManager.getLogger(DiskPageWriter.class);
 
     private static final String FILE_NOT_FOUND_ERROR_MESSAGE = "spider.webpageloader.fnf";
 //    private static final String MALFORMED_URL_ERROR_MESSAGE = "spider.webpageloader.malformedurl";
@@ -41,9 +40,11 @@ public class DiskPageWriter {
 
     public Path writePage(TreeNode<PageData> treeNode, LinkParser linkParser) {
         URL url = treeNode.getData().getUrl();
+        LOGGER.info("Writing page: {}", url.toString());
         try (InputStream is = url.openStream()) {
             return writePage(is, getWritingPath(treeNode), linkParser);
         } catch (IOException ex) {
+            LOGGER.error("Error occured while creating inputstream to ", treeNode.getData().getUrl());
             LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
         }
         return null;
@@ -74,12 +75,14 @@ public class DiskPageWriter {
             return Paths.get(config.getDiskStoragePath().toString(), randomFileName);
         }
         Path parentPath = treeNode.getParent().getData().getDiskPath();
-        if (Files.exists(parentPath) && !Files.isDirectory(parentPath)) {
-            Files.createDirectory(parentPath);
-            LOGGER.debug("Created directory for children "+parentPath);
+        String s = parentPath.toString();
+        Path dir = Paths.get(s.substring(0, s.length()-HTML.length()));
+        if (!Files.exists(dir) && !Files.isDirectory(dir)) {
+            Files.createDirectory(dir);
+            LOGGER.debug("Created directory for children "+dir.toString());
         }
         
-        return Paths.get(parentPath.toString(), randomFileName);
+        return Paths.get(dir.toString(), randomFileName);
     }
 
 }

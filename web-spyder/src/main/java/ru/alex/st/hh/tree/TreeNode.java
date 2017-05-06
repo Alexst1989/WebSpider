@@ -32,7 +32,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
 	public int getLevel() {
 		if (this.isRoot())
-			return 0;
+			return 1;
 		else
 			return parent.getLevel() + 1;
 	}
