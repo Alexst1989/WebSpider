@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,15 +19,19 @@ import org.apache.logging.log4j.Logger;
 import ru.alex.st.hh.config.MessageSource;
 import ru.alex.st.hh.config.SpiderConfiguration;
 import ru.alex.st.hh.programm.Programm;
+import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.LinkParser;
+import ru.alex.st.hh.web.PageData;
 
 public class DiskPageWriter {
 
     private static final Logger LOGGER = LogManager.getLogger(Programm.class);
 
     private static final String FILE_NOT_FOUND_ERROR_MESSAGE = "spider.webpageloader.fnf";
-    private static final String MALFORMED_URL_ERROR_MESSAGE = "spider.webpageloader.malformedurl";
+//    private static final String MALFORMED_URL_ERROR_MESSAGE = "spider.webpageloader.malformedurl";
     private static final String CONNECTION_ERROR = "spider.webpageloader.malformedurl";
+
+    private static final String HTML = ".html";
 
     private SpiderConfiguration config;
 
@@ -34,16 +39,12 @@ public class DiskPageWriter {
         this.config = config;
     }
 
-    public Path writePage(String urlString, String fileName, LinkParser linkParser) {
-        try {
-            URL url = new URL(urlString);
-            try (InputStream is = url.openStream()) {
-                return writePage(is, Paths.get(config.getDiskStoragePath(), fileName), linkParser);
-            } catch (IOException ex) {
-                LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
-            }
-        } catch (MalformedURLException ex) {
-            LOGGER.error(MessageSource.getMessage(MALFORMED_URL_ERROR_MESSAGE, config.getLocale()), ex);
+    public Path writePage(TreeNode<PageData> treeNode, LinkParser linkParser) {
+        URL url = treeNode.getData().getUrl();
+        try (InputStream is = url.openStream()) {
+            return writePage(is, getWritingPath(treeNode), linkParser);
+        } catch (IOException ex) {
+            LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
         }
         return null;
     }
@@ -65,6 +66,20 @@ public class DiskPageWriter {
             LOGGER.error(MessageSource.getMessage(FILE_NOT_FOUND_ERROR_MESSAGE, config.getLocale()), e);
             return null;
         }
+    }
+
+    private Path getWritingPath(TreeNode<PageData> treeNode) throws IOException {
+        String randomFileName = String.format("%s%s", UUID.randomUUID().toString(), HTML);
+        if (treeNode.isRoot()) {
+            return Paths.get(config.getDiskStoragePath().toString(), randomFileName);
+        }
+        Path parentPath = treeNode.getParent().getData().getDiskPath();
+        if (Files.exists(parentPath) && !Files.isDirectory(parentPath)) {
+            Files.createDirectory(parentPath);
+            LOGGER.debug("Created directory for children "+parentPath);
+        }
+        
+        return Paths.get(parentPath.toString(), randomFileName);
     }
 
 }

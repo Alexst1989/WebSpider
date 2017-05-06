@@ -1,5 +1,7 @@
 package ru.alex.st.hh.config;
 
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.Locale;
 
 public interface SpiderConfiguration {
@@ -9,7 +11,7 @@ public interface SpiderConfiguration {
 	 * 
 	 * @return String with file path
 	 */
-	String getDiskStoragePath();
+	Path getDiskStoragePath();
 	
 	/**
 	 * Path in file system, where spider will hold articles
@@ -23,7 +25,7 @@ public interface SpiderConfiguration {
 	 * 
 	 * @return start url for spider
 	 */
-	String getStartUrl();
+	URL getStartUrl();
 	
 	/**
 	 * Sets a start url for spider, where it begins to build tree of links

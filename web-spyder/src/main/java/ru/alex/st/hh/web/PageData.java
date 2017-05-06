@@ -1,24 +1,25 @@
 package ru.alex.st.hh.web;
 
+import java.net.URL;
 import java.nio.file.Path;
 
 public class PageData {
 	
-	private String urlString;
+	private URL urlString;
 	
 	private Path diskPath;
 	
-	public PageData(String urlString, Path diskPath) {
+	public PageData(URL urlString, Path diskPath) {
 	    this.urlString = urlString;
 	    this.diskPath = diskPath;
 	}
 
-	public String getUrlString() {
+	public URL getUrl() {
 		return urlString;
 	}
 
-	public void setUrlString(String urlString) {
-		this.urlString = urlString;
+	public void setUrl(URL url) {
+		this.urlString = url;
 	}
 
 	public Path getDiskPath() {

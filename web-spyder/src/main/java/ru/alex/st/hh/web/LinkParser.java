@@ -12,7 +12,6 @@ public class LinkParser {
     private static final Pattern ABSOLUT_LINK_WITH_PROTOCOL = Pattern.compile("href=\"(http|https)://.+?\"");
     private static final Pattern ABSOLUT_LINK_WITHOUT_PROTOCOL = Pattern.compile("href=\"//.+?\"");
     
-    
     private Set<String> linkSet = new LinkedHashSet<String>();
     
     private URL parent;
