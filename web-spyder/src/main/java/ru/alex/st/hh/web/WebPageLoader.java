@@ -3,6 +3,7 @@ package ru.alex.st.hh.web;
 import java.nio.file.Path;
 
 import ru.alex.st.hh.disk.DiskPageWriter;
+import ru.alex.st.hh.disk.search.LinkParser;
 import ru.alex.st.hh.tree.TreeNode;
 
 public class WebPageLoader implements Runnable {
@@ -20,7 +21,8 @@ public class WebPageLoader implements Runnable {
 
 	@Override
 	public void run() {
-	    Path diskPath = pageWriter.writePage(treeNode.getData().getUrlString(), "1.txt");
+	    Path diskPath = pageWriter.writePage(treeNode.getData().getUrlString(), "1.txt", new LinkParser());
+	    
 	    treeNode.getData().setDiskPath(diskPath);
 	}
 	
@@ -28,6 +30,4 @@ public class WebPageLoader implements Runnable {
 	    return finished;
 	}
 	
-	
-
 }

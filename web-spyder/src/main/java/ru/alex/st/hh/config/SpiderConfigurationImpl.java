@@ -3,7 +3,7 @@ package ru.alex.st.hh.config;
 import java.util.Locale;
 
 
-public class SpyderConfigurationImpl implements SpyderConfiguration {
+public class SpiderConfigurationImpl implements SpiderConfiguration {
 
 	private String diskStoragePath;
 

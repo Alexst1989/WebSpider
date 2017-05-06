@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import ru.alex.st.hh.config.ConfigurationBuilder;
-import ru.alex.st.hh.config.SpyderConfiguration;
-import ru.alex.st.hh.web.spyder.WebSpyder;
+import ru.alex.st.hh.config.SpiderConfiguration;
+import ru.alex.st.hh.web.spider.WebSpider;
 
 public class Programm {
 
@@ -28,15 +28,15 @@ public class Programm {
 	 */
 
 	public static void main(String args[]) {
-		SpyderConfiguration config = new ConfigurationBuilder()
+		SpiderConfiguration config = new ConfigurationBuilder()
 						.setDepth(3)
 						.setDiskStoragePath("D:/develop/Temp")
 						.setStartUrl("https://ru.wikipedia.org/wiki")
 						.setLocale("ru_RU")
 						.build();
 		
-		WebSpyder spyder = new WebSpyder(config);
-		spyder.loadPages();
+		WebSpider spider = new WebSpider(config);
+		spider.loadPages();
 		
 		
 		

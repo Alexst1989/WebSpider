@@ -2,31 +2,31 @@ package ru.alex.st.hh.config;
 
 import java.util.Locale;
 
-public interface SpyderConfiguration {
+public interface SpiderConfiguration {
  
 	/**
-	 * Path in file system, where spyder will hold articles
+	 * Path in file system, where spider will hold articles
 	 * 
 	 * @return String with file path
 	 */
 	String getDiskStoragePath();
 	
 	/**
-	 * Path in file system, where spyder will hold articles
+	 * Path in file system, where spider will hold articles
 	 * 
 	 * @param diskStoragePath
 	 */
 	void setDiskStoragePath(String diskStoragePath);
 	
 	/**
-	 * Returns a start url for spyder, where it begins to build tree of links
+	 * Returns a start url for spider, where it begins to build tree of links
 	 * 
-	 * @return start url for spyder
+	 * @return start url for spider
 	 */
 	String getStartUrl();
 	
 	/**
-	 * Sets a start url for spyder, where it begins to build tree of links
+	 * Sets a start url for spider, where it begins to build tree of links
 	 * 
 	 * @param startUrl string value of url
 	 */

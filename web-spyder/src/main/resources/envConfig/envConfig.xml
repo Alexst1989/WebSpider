@@ -1,5 +1,5 @@
 <configurationImpl>
-	<diskStoragePath>D:/Temp/Spyder</diskStoragePath>
+	<diskStoragePath>D:/Temp/Spider</diskStoragePath>
 	<startUrl>http:/</startUrl>
 	<depth>2</depth>
 	<localString>ru_RU</localString>	

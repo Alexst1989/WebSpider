@@ -2,10 +2,10 @@ package ru.alex.st.hh.config;
 
 public class ConfigurationBuilder  {
 	
-	private SpyderConfiguration config;
+	private SpiderConfiguration config;
 	
 	public ConfigurationBuilder() {
-		config = new SpyderConfigurationImpl();
+		config = new SpiderConfigurationImpl();
 	}
 	
 	public ConfigurationBuilder setDiskStoragePath(String diskStoragePath) {
@@ -28,7 +28,7 @@ public class ConfigurationBuilder  {
 		return this;
 	}
 	
-	public SpyderConfiguration build() {
+	public SpiderConfiguration build() {
 		return config;
 	}
 
