@@ -29,7 +29,7 @@ public class Programm {
 
 	public static void main(String args[]) {
 		SpiderConfiguration config = new ConfigurationBuilder()
-						.setDepth(2)
+						.setDepth(3)
 						.setDiskStoragePath("D:/develop/Temp")
 						.setStartUrl("https://ru.wikipedia.org/wiki")
 						.setLocale("ru_RU")
