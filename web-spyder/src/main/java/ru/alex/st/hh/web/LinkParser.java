@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class LinkParser {
     
     private static final Pattern RELATIVE_LINK = Pattern.compile("href=\"/[w].+?\"");
-    private static final Pattern ABSOLUT_LINK_WITH_PROTOCOL = Pattern.compile("href=\"(http|https)://.+?\"");
+    private static final Pattern ABSOLUT_LINK_WITH_PROTOCOL = Pattern.compile("href=\"(http|https)://.*?(wiki)+.+?\"");
     private static final Pattern ABSOLUT_LINK_WITHOUT_PROTOCOL = Pattern.compile("href=\"//.*?(wiki)+.+?\"");
     
     

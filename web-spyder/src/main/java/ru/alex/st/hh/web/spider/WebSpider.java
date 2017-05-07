@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import ru.alex.st.hh.config.SpiderConfiguration;
 import ru.alex.st.hh.disk.DiskPageWriter;
+import ru.alex.st.hh.disk.search.DiskSearcher;
 import ru.alex.st.hh.disk.search.SearchResult;
 import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.PageData;
@@ -32,25 +33,38 @@ public class WebSpider {
     }
 
     public void loadPages() {
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 3);
+//        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 3);
         DiskPageWriter diskWriter = new DiskPageWriter(config);
         PageLoaderCallable callable = new PageLoaderCallable(config, treeNode, diskWriter, globalLinkSet);
-        Future<PageLoaderResult> future = executor.submit(callable);
+        Thread t = new Thread(() -> {
+            try {
+                callable.call();
+            } catch (Exception e) {
+                LOGGER.error("Error", e);
+            }
+        });
+        t.start();
         try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-             LOGGER.error("exception", e);
+            t.join();
+        } catch (InterruptedException e) {
+            LOGGER.error("Error", e);
         }
-        executor.shutdown();
+        isLoaded = true;
+//        Future<PageLoaderResult> future = executor.submit(callable);
+//        try {
+//            future.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//             LOGGER.error("exception", e);
+//        }
+//        executor.shutdown();
     }
 
     public SearchResult searchInLoadedPages(String wordToSearch) {
         if (!isLoaded) {
             throw new SpiderException("Spider havn't load web pages");
         }
-        SearchResult resultSearch = new SearchResult();
-
-        return resultSearch;
+        DiskSearcher searcher = new DiskSearcher(config, treeNode, wordToSearch);
+        return searcher.search();
     }
 
 }

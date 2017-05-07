@@ -37,8 +37,9 @@ public class Programm {
 		
 		WebSpider spider = new WebSpider(config);
 		spider.loadPages();
-        
+        LOGGER.info(spider.searchInLoadedPages("Русский"));
 		
+        
 		
 		LOGGER.info("Finished");
 	}

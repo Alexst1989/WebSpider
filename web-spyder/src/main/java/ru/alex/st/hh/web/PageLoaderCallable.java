@@ -58,7 +58,7 @@ public class PageLoaderCallable implements Callable<PageLoaderResult> {
                     if (!globalLinkSet.contains(link)) {
                         globalLinkSet.add(link);
                         lock.unlock();
-                        LOGGER.trace("number {} of {}. found link: {}. New thread will be created", counter,
+                        LOGGER.debug("number {} of {}. found link: {}. New thread will be created", counter,
                                         linkList.size(), link);
                         URL url = new URL(link);
                         TreeNode<PageData> node = treeNode.addChild(new PageData(url, null));
@@ -84,7 +84,7 @@ public class PageLoaderCallable implements Callable<PageLoaderResult> {
     }
     
     private static int getNThreads() {
-        return Runtime.getRuntime().availableProcessors() * 3;
+        return Runtime.getRuntime().availableProcessors();
     }
 
 }

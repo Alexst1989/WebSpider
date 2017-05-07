@@ -8,4 +8,8 @@ public class SpiderException extends RuntimeException {
         super(msg);
     }
     
+    public SpiderException(String msg, Throwable e) {
+        super(msg, e);
+    }
+    
 }

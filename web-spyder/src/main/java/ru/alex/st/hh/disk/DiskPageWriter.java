@@ -21,6 +21,7 @@ import ru.alex.st.hh.config.SpiderConfiguration;
 import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.LinkParser;
 import ru.alex.st.hh.web.PageData;
+import ru.alex.st.hh.web.spider.SpiderException;
 
 public class DiskPageWriter {
 
@@ -46,8 +47,8 @@ public class DiskPageWriter {
         } catch (IOException ex) {
             LOGGER.error("Error occured while creating inputstream to ", treeNode.getData().getUrl());
             LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
+            throw new SpiderException(String.format("Link with URL %s won't be processed due to error in connection", url.toString()), ex);
         }
-        return null;
     }
 
     public Path writePage(InputStream is, Path outPath, LinkParser linkParser) {
