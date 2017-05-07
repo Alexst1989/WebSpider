@@ -28,6 +28,11 @@ public class ConfigurationBuilder  {
 		return this;
 	}
 	
+	public ConfigurationBuilder setLinkLevelLimit(long limit) {
+	    config.setLinkLevelLimit(limit);
+	    return this;
+	}
+	
 	public SpiderConfiguration build() {
 		return config;
 	}

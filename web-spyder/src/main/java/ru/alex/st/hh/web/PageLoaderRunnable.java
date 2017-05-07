@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -42,50 +43,57 @@ public class PageLoaderRunnable implements Runnable {
     @SuppressWarnings("rawtypes")
     @Override
     public void run() {
+        List<Future> futureList = new LinkedList<>();
+        ExecutorService InnerExecutor = Executors.newFixedThreadPool(getNThreads());
         try {
             Path path = diskWriter.writePage(treeNode, linkParser);
             treeNode.getData().setDiskPath(path);
-            List<Future> futureList = new LinkedList<>();
             if (treeNode.getLevel() < config.getDepth()) {
-                ExecutorService InnerExecutor = Executors.newFixedThreadPool(getNThreads());
                 Set<String> linkList = linkParser.getLinks();
                 LOGGER.info("Page {}. Links will be processed {}", treeNode.getData().getUrl().toString(),
                                 linkList.size());
                 int counter = 0;
                 for (String link : linkList) {
                     counter++;
-                    lock.lock();
-                    try {
-                        if (!globalLinkSet.contains(link)) {
-                            globalLinkSet.add(link);
-                            lock.unlock();
-                            LOGGER.debug("number {} of {}. found link: {}. New thread will be created", counter,
-                                            linkList.size(), link);
-                            URL url = new URL(link);
-                            TreeNode<PageData> node = treeNode.addChild(new PageData(url, null));
-                            futureList.add(InnerExecutor
-                                            .submit(new PageLoaderRunnable(config, node, diskWriter, globalLinkSet)));
-                        } else {
-                            LOGGER.trace("Dublicte found. Link {} has already been processed", link);
+                    if (config.getLinkLevelLimit() == 0 || counter <= config.getLinkLevelLimit()) { //For debugging purpose
+                        lock.lock();
+                        try {
+                            if (!globalLinkSet.contains(link)) {
+                                globalLinkSet.add(link);
+                                lock.unlock();
+                                LOGGER.debug("number {} of {}. found link: {}. New thread will be created", counter,
+                                                linkList.size(), link);
+                                URL url = new URL(link);
+                                TreeNode<PageData> node = treeNode.addChild(new PageData(url, null));
+                                futureList.add(InnerExecutor.submit(
+                                                new PageLoaderRunnable(config, node, diskWriter, globalLinkSet)));
+                            } else {
+                                LOGGER.trace("Dublicte found. Link {} has already been processed", link);
+                            }
+                        } catch (MalformedURLException e) {
+                            LOGGER.error("Bad url", e);
+                        } finally {
+                            if (lock.isLocked())
+                                lock.unlock();
                         }
-                    } catch (MalformedURLException e) {
-                        LOGGER.error("Bad url", e);
-                    } finally {
-                        if (lock.isLocked())
-                            lock.unlock();
                     }
                 }
-                LOGGER.trace("TthreadPool {} is waiting for children completition", InnerExecutor);
-                for (Future future : futureList) {
-                    future.get();
-                }
-                LOGGER.trace("TthreadPool {} is ready to shutdown", InnerExecutor);
-                InnerExecutor.shutdown();
-                LOGGER.trace("ThreadPool {} is shut down.", InnerExecutor);
             }
         } catch (Exception ex) {
             LOGGER.error("Exception caught. Thread will finish now.", ex);
             return;
+        } finally {
+            LOGGER.trace("TthreadPool {} is waiting for children completition", InnerExecutor);
+            for (Future future : futureList) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    LOGGER.error("Exception caught. Thread will finish now.", e);
+                }
+            }
+            LOGGER.trace("TthreadPool {} is ready to shutdown", InnerExecutor);
+            InnerExecutor.shutdown();
+            LOGGER.trace("ThreadPool {} is shut down.", InnerExecutor);
         }
     }
 

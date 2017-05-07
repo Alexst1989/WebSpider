@@ -17,6 +17,8 @@ public class SpiderConfigurationImpl implements SpiderConfiguration {
     private int depth;
 
     private Locale locale = Locale.getDefault();
+    
+    private long limit;
 
     @Override
     public Path getDiskStoragePath() {
@@ -60,6 +62,16 @@ public class SpiderConfigurationImpl implements SpiderConfiguration {
     @Override
     public void setLocale(String localeStringValue) {
         locale = new Locale(localeStringValue);
+    }
+
+    @Override
+    public long getLinkLevelLimit() {
+        return limit;
+    }
+
+    @Override
+    public void setLinkLevelLimit(long limit) {
+        this.limit = limit;        
     }
 
 }

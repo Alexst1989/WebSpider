@@ -30,6 +30,7 @@ public class Programm {
 	public static void main(String args[]) {
 		SpiderConfiguration config = new ConfigurationBuilder()
 						.setDepth(3)
+						.setLinkLevelLimit(0) //For debugging purposes only, 0 without limit
 						.setDiskStoragePath("D:/develop/Temp")
 						.setStartUrl("https://ru.wikipedia.org/wiki")
 						.setLocale("ru_RU")

@@ -61,4 +61,8 @@ public interface SpiderConfiguration {
 	 */
 	public void setLocale(String localeStringValue);
 	
+	
+	public long getLinkLevelLimit();
+	
+	public void setLinkLevelLimit(long limit);
 }

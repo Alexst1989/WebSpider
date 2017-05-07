@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +25,8 @@ import ru.alex.st.hh.web.PageData;
 import ru.alex.st.hh.web.spider.SpiderException;
 
 public class DiskPageWriter {
+    
+    private static AtomicInteger fileCounter = new AtomicInteger(0);
 
     private static final Logger LOGGER = LogManager.getLogger(DiskPageWriter.class);
 
@@ -72,7 +75,7 @@ public class DiskPageWriter {
     }
 
     private Path getWritingPath(TreeNode<PageData> treeNode) throws IOException {
-        String randomFileName = String.format("%s%s", UUID.randomUUID().toString(), HTML);
+        String randomFileName = String.format("%s%s", fileCounter.incrementAndGet(), HTML);
         if (treeNode.isRoot()) {
             return Paths.get(config.getDiskStoragePath().toString(), randomFileName);
         }
