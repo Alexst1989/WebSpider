@@ -51,8 +51,11 @@ public class DiskSearcher {
             try (FileInputStream fis = new FileInputStream(path.toFile());
                             InputStreamReader isr = new InputStreamReader(fis);
                             BufferedReader br = new BufferedReader(isr)) {
-                row++;
-                parseLine(br.readLine(), result, row, link);
+                String s = null;
+                while ((s = br.readLine()) != null) {
+                    row++;
+                    parseLine(s, result, row, link, path);
+                }
             } catch (FileNotFoundException e) {
                 LOGGER.error("File {} not found, for link {}", path.toString(), link);
             } catch (IOException e) {
@@ -63,10 +66,10 @@ public class DiskSearcher {
         }
     }
 
-    private void parseLine(String s, SearchResult result, int row, String link) {
+    private void parseLine(String s, SearchResult result, int row, String link, Path path) {
         Matcher matcher = searhPattern.matcher(s);
         while (matcher.find()) {
-            result.addOccurrence(new Occurrence(link, row, matcher.start(), matcher.group()));
+            result.addOccurrence(new Occurrence(link, row, matcher.start(), matcher.group(), path));
         }
     }
 

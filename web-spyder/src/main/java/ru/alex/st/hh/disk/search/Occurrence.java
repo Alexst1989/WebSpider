@@ -1,5 +1,7 @@
 package ru.alex.st.hh.disk.search;
 
+import java.nio.file.Path;
+
 public class Occurrence {
     
     private String link;
@@ -10,11 +12,22 @@ public class Occurrence {
     
     private String group;
     
-    public Occurrence(String link, int row, int column, String group) {
+    private Path path;
+    
+    public Occurrence(String link, int row, int column, String group, Path path) {
         this.link = link;
         this.row = row;
         this.column = column;
         this.group = group;
+        this.path = path;
+    }
+
+    public Path getPath() {
+        return path;
+    }
+
+    public void setPath(Path path) {
+        this.path = path;
     }
 
     public String getLink() {

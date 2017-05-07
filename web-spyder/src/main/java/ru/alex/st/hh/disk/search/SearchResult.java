@@ -20,7 +20,8 @@ public class SearchResult {
         StringBuilder sb = new StringBuilder();
         for (Occurrence occur : occurrenceList) {
             sb.append("Link: ").append(occur.getLink()).append("\r")
-                .append("Pos: [").append(occur.getRow()).append(": ")
+                .append("File path: ").append(occur.getPath()).append("\r")
+                .append("Position in file: [").append(occur.getRow()).append(": ")
                 .append(occur.getColumn()).append("]").append("\r")
                 .append(occur.getGroup()).append("\r")
                 .append("\r");

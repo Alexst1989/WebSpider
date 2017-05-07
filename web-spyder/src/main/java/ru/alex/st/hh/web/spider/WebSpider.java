@@ -1,10 +1,6 @@
 package ru.alex.st.hh.web.spider;
 
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +11,7 @@ import ru.alex.st.hh.disk.search.DiskSearcher;
 import ru.alex.st.hh.disk.search.SearchResult;
 import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.PageData;
-import ru.alex.st.hh.web.PageLoaderCallable;
-import ru.alex.st.hh.web.PageLoaderResult;
+import ru.alex.st.hh.web.PageLoaderRunnable;
 
 public class WebSpider {
 
@@ -33,16 +28,9 @@ public class WebSpider {
     }
 
     public void loadPages() {
-//        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 3);
         DiskPageWriter diskWriter = new DiskPageWriter(config);
-        PageLoaderCallable callable = new PageLoaderCallable(config, treeNode, diskWriter, globalLinkSet);
-        Thread t = new Thread(() -> {
-            try {
-                callable.call();
-            } catch (Exception e) {
-                LOGGER.error("Error", e);
-            }
-        });
+        PageLoaderRunnable runnable = new PageLoaderRunnable(config, treeNode, diskWriter, globalLinkSet);
+        Thread t = new Thread(runnable);
         t.start();
         try {
             t.join();
@@ -50,20 +38,13 @@ public class WebSpider {
             LOGGER.error("Error", e);
         }
         isLoaded = true;
-//        Future<PageLoaderResult> future = executor.submit(callable);
-//        try {
-//            future.get();
-//        } catch (InterruptedException | ExecutionException e) {
-//             LOGGER.error("exception", e);
-//        }
-//        executor.shutdown();
     }
 
-    public SearchResult searchInLoadedPages(String wordToSearch) {
+    public SearchResult searchInLoadedPages(String regex) {
         if (!isLoaded) {
             throw new SpiderException("Spider havn't load web pages");
         }
-        DiskSearcher searcher = new DiskSearcher(config, treeNode, wordToSearch);
+        DiskSearcher searcher = new DiskSearcher(config, treeNode, regex);
         return searcher.search();
     }
 

@@ -63,6 +63,7 @@ public class DiskPageWriter {
                 bw.write(s);
                 bw.write(System.lineSeparator());
             }
+            bw.flush();
             return outPath;
         } catch (IOException e) {
             LOGGER.error(MessageSource.getMessage(FILE_NOT_FOUND_ERROR_MESSAGE, config.getLocale()), e);
