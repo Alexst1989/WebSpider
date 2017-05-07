@@ -27,18 +27,18 @@ public class PageLoaderCallable implements Callable<PageLoaderResult> {
     private TreeNode<PageData> treeNode;
     private DiskPageWriter diskWriter;
     private LinkParser linkParser;
-    private ExecutorService executor;
+//    private ExecutorService executor;
     private SpiderConfiguration config;
     private Set<String> globalLinkSet;
 
     public PageLoaderCallable(SpiderConfiguration config, TreeNode<PageData> treeNode, DiskPageWriter diskWriter,
-                    ExecutorService executor, Set<String> globalLinkSet) {
+                    Set<String> globalLinkSet) {
         this.config = config;
         this.treeNode = treeNode;
         this.diskWriter = diskWriter;
         this.globalLinkSet = globalLinkSet;
         this.linkParser = new LinkParser(treeNode.getData().getUrl());
-        this.executor = executor;
+//        this.executor = executor;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PageLoaderCallable implements Callable<PageLoaderResult> {
                                         linkList.size(), link);
                         URL url = new URL(link);
                         TreeNode<PageData> node = treeNode.addChild(new PageData(url, null));
-                        futureList.add(executor.submit(new PageLoaderCallable(config, node, diskWriter, InnerExecutor, globalLinkSet)));
+                        futureList.add(InnerExecutor.submit(new PageLoaderCallable(config, node, diskWriter, globalLinkSet)));
                     } else {
                         LOGGER.trace("Dublicte found. Link {} has already been processed", link);
                     }
@@ -71,10 +71,13 @@ public class PageLoaderCallable implements Callable<PageLoaderResult> {
                         lock.unlock();
                 }
             }
+            LOGGER.trace("TthreadPool {} is waiting for children completition", InnerExecutor);
             for (Future<PageLoaderResult> future : futureList) {
                 future.get();
             }
+            LOGGER.trace("TthreadPool {} is ready to shutdown", InnerExecutor);
             InnerExecutor.shutdown();
+            LOGGER.trace("ThreadPool {} is shut down.", InnerExecutor);
         }
         
         return null;

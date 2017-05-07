@@ -34,7 +34,7 @@ public class WebSpider {
     public void loadPages() {
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 3);
         DiskPageWriter diskWriter = new DiskPageWriter(config);
-        PageLoaderCallable callable = new PageLoaderCallable(config, treeNode, diskWriter, executor, globalLinkSet);
+        PageLoaderCallable callable = new PageLoaderCallable(config, treeNode, diskWriter, globalLinkSet);
         Future<PageLoaderResult> future = executor.submit(callable);
         try {
             future.get();
