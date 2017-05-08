@@ -54,8 +54,8 @@ public class Programm {
 	public static void main(String args[]) {
 		SpiderConfiguration config = new ConfigurationBuilder()
 	                    .setStartUrl("https://ru.wikipedia.org/wiki") //Входной url
-		                .setDepth(7)                                  //Глубина выкачвания
-						.setLinkLevelLimit(10)                        //0 без ограничений. Для отладочных целей можно ограничить число скачиваемых статей на каждом уровне
+		                .setDepth(2)                                  //Глубина выкачвания
+						.setLinkLevelLimit(0)                        //0 без ограничений. Для отладочных целей можно ограничить число скачиваемых статей на каждом уровне
 						.setDiskStoragePath("D:/develop/Temp")        //Путь для хранения скачанных статей
 						.setLocale("en")                           //Для локализации приложения. Есть ru_RU
 						.build();
