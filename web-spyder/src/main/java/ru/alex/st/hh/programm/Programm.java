@@ -58,7 +58,7 @@ public class Programm {
 		                .setDepth(7)                                  //Глубина выкачвания
 						.setLinkLevelLimit(10)                        //0 без ограничений. Для отладочных целей можно ограничить число скачиваемых статей на каждом уровне
 						.setDiskStoragePath("D:/develop/Temp")        //Путь для хранения скачанных статей
-						.setLocale("en")                           //Для локализации приложения
+						.setLocale("en")                           //Для локализации приложения. Есть ru_RU
 						.build();
 		
 		WebSpider spider = new WebSpider(config); //Создаем экземпляр паука по конфиигу
