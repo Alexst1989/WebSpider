@@ -55,7 +55,7 @@ public class PageLoaderRunnable implements Runnable {
                 int counter = 0;
                 for (String link : linkList) {
                     counter++;
-                    if (config.getLinkLevelLimit() == 0 || counter <= config.getLinkLevelLimit()) { //For debugging purpose
+                    if (config.getLinkLevelLimit() == 0 || counter <= config.getLinkLevelLimit()) { //For debugging purposes
                         lock.lock();
                         try {
                             if (!globalLinkSet.contains(link)) {
@@ -83,7 +83,7 @@ public class PageLoaderRunnable implements Runnable {
             LOGGER.error("Exception caught. Thread will finish now.", ex);
             return;
         } finally {
-            LOGGER.trace("TthreadPool {} is waiting for children completition", InnerExecutor);
+            LOGGER.trace("ThreadPool {} is waiting for children completition", InnerExecutor);
             for (Future future : futureList) {
                 try {
                     future.get();

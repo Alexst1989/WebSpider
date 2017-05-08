@@ -11,7 +11,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.LogManager;
@@ -48,7 +47,7 @@ public class DiskPageWriter {
         try (InputStream is = url.openStream()) {
             return writePage(is, getWritingPath(treeNode), linkParser);
         } catch (IOException ex) {
-            LOGGER.error("Error occured while creating inputstream to ", treeNode.getData().getUrl());
+            LOGGER.error("Error occured while creating inputstream to {}", treeNode.getData().getUrl());
             LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
             throw new SpiderException(String.format("Link with URL %s won't be processed due to error in connection", url.toString()), ex);
         }
@@ -84,7 +83,7 @@ public class DiskPageWriter {
         Path dir = Paths.get(s.substring(0, s.length()-HTML.length()));
         if (!Files.exists(dir) && !Files.isDirectory(dir)) {
             Files.createDirectory(dir);
-            LOGGER.debug("Created directory for children "+dir.toString());
+            LOGGER.debug("Created directory for children {}", dir.toString());
         }
         
         return Paths.get(dir.toString(), randomFileName);
