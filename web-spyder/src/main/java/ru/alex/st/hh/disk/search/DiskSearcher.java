@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ru.alex.st.hh.config.MessageSource;
 import ru.alex.st.hh.config.SpiderConfiguration;
 import ru.alex.st.hh.tree.TreeNode;
 import ru.alex.st.hh.web.PageData;
@@ -20,6 +21,10 @@ public class DiskSearcher {
 
     private static final Logger LOGGER = LogManager.getLogger(DiskSearcher.class);
 
+    private static final String ERROR1 = "spider.disksearcher.error1";
+    private static final String ERROR2 = "spider.disksearcher.error2";
+    private static final String WARN1 = "spider.disksearcher.warn1";  
+    
     private SpiderConfiguration config;
 
     private String wordToFind;
@@ -57,12 +62,12 @@ public class DiskSearcher {
                     parseLine(s, result, row, link, path);
                 }
             } catch (FileNotFoundException e) {
-                LOGGER.error("File {} not found, for link {}", path.toString(), link);
+                LOGGER.error(MessageSource.getMessage(ERROR1, config.getLocale()), path.toString(), link);
             } catch (IOException e) {
-                LOGGER.error("Exception cought", e);
+                LOGGER.error(MessageSource.getMessage(ERROR2, config.getLocale()), e);
             }
         } else {
-            LOGGER.warn("There is no path for link {}", link);
+            LOGGER.warn(MessageSource.getMessage(WARN1, config.getLocale()), link);
         }
     }
 

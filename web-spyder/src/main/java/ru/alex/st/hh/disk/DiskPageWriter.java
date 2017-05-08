@@ -24,14 +24,17 @@ import ru.alex.st.hh.web.PageData;
 import ru.alex.st.hh.web.spider.SpiderException;
 
 public class DiskPageWriter {
-    
-    private static AtomicInteger fileCounter = new AtomicInteger(0);
 
     private static final Logger LOGGER = LogManager.getLogger(DiskPageWriter.class);
 
+    private static final String INFO1 = "spider.diskpagewriter.info1";
+    private static final String ERROR1 = "spider.diskpagewriter.error1";
+    private static final String DEBUG1 = "spider.diskpagewriter.debug1";
+    private static final String EXCEPTION_MSG = "spider.diskpagewriter.exc.msg";
     private static final String FILE_NOT_FOUND_ERROR_MESSAGE = "spider.webpageloader.fnf";
-//    private static final String MALFORMED_URL_ERROR_MESSAGE = "spider.webpageloader.malformedurl";
     private static final String CONNECTION_ERROR = "spider.webpageloader.malformedurl";
+    
+    private AtomicInteger fileCounter = new AtomicInteger(0);
 
     private static final String HTML = ".html";
 
@@ -43,13 +46,15 @@ public class DiskPageWriter {
 
     public Path writePage(TreeNode<PageData> treeNode, LinkParser linkParser) {
         URL url = treeNode.getData().getUrl();
-        LOGGER.info("Writing page: {}", url.toString());
+        LOGGER.info(MessageSource.getMessage(INFO1, config.getLocale()), url.toString());
         try (InputStream is = url.openStream()) {
             return writePage(is, getWritingPath(treeNode), linkParser);
         } catch (IOException ex) {
-            LOGGER.error("Error occured while creating inputstream to {}", treeNode.getData().getUrl());
+            LOGGER.error(MessageSource.getMessage(ERROR1, config.getLocale()), treeNode.getData().getUrl());
             LOGGER.error(MessageSource.getMessage(CONNECTION_ERROR, config.getLocale()), ex);
-            throw new SpiderException(String.format("Link with URL %s won't be processed due to error in connection", url.toString()), ex);
+            throw new SpiderException(
+                            String.format(MessageSource.getMessage(EXCEPTION_MSG, config.getLocale()), url.toString()),
+                            ex);
         }
     }
 
@@ -80,12 +85,12 @@ public class DiskPageWriter {
         }
         Path parentPath = treeNode.getParent().getData().getDiskPath();
         String s = parentPath.toString();
-        Path dir = Paths.get(s.substring(0, s.length()-HTML.length()));
+        Path dir = Paths.get(s.substring(0, s.length() - HTML.length()));
         if (!Files.exists(dir) && !Files.isDirectory(dir)) {
             Files.createDirectory(dir);
-            LOGGER.debug("Created directory for children {}", dir.toString());
+            LOGGER.debug(MessageSource.getMessage(DEBUG1, config.getLocale()), dir.toString());
         }
-        
+
         return Paths.get(dir.toString(), randomFileName);
     }
 
